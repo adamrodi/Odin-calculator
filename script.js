@@ -1,22 +1,8 @@
-function operate() {
-    switch (operator) {
-        case 'add': result = firstOperand + secondOperand;
-        case 'subtract': result = firstOperand - secondOperand;
-        case 'multiply': result = firstOperand * secondOperand;
-        case 'divide': result = firstOperand / secondOperand;
-    }
-}
 let displayValue = '0';
 let firstOperand = null;
 let secondOperand = null;
 let operator = null;
 let result = '0';
-
-console.log(add(100, 80));
-console.log(subtract(100, 80));
-console.log(multiply(100, 80));
-console.log(divide(100, 80));
-
 
 const display = document.getElementById('display');
 const equalsButton = document.getElementById('equals');
@@ -39,9 +25,33 @@ buttons.forEach((button) => {
             updateDisplay();
         });
     }
-    else if(button.id === "clear") {
+    else if (button.id === "clear") {
         button.addEventListener("click", () => {
             clear();
+            updateDisplay();
+        });
+    }
+    else if (button.id === "equals") {
+        button.addEventListener("click", () => {
+            equals();
+            updateDisplay();
+        });
+    }
+    else if (button.id === "decimal") {
+        button.addEventListener("click", () => {
+            inputDecimal();
+            updateDisplay();
+        });
+    }
+    else if (button.id === "percent") {
+        button.addEventListener("click", () => {
+            inputPercent();
+            updateDisplay();
+        });
+    }
+    else if (button.id === "sign") {
+        button.addEventListener("click", () => {
+            inputSign();
             updateDisplay();
         });
     }
@@ -49,27 +59,54 @@ buttons.forEach((button) => {
 
 
 function inputOperand(operand) {
-    if (firstOperand === null) {
+    //if (firstOperand === null) {
         if (displayValue === 0 || displayValue === '0') {
             displayValue = operand;
         }
         else {
             displayValue += operand;
         }
-    }
+    //}
 }
 
-function inputOperator(operator) {
+function inputOperator(op) {
+    operator = op;
+    firstOperand = displayValue;
+    displayValue = '0'
+    console.log(firstOperand + ' ' + operator);
+    
+}
 
+function inputDecimal() {
+    displayValue += '.';
+}
+
+function inputPercent() {
+    displayValue = (displayValue / 100).toString();
+}
+
+function inputSign() {
+    displayValue *= -1;
 }
 
 function updateDisplay() {
-    if (displayValue.length < 9) {
-        display.textContent = displayValue;
+    // Convert to string if not already
+    let displayString = displayValue.toString();
+    // If number is too long
+    if (displayString.length > 9) {
+        if (displayString.includes('.')) {
+            // For decimal numbers, truncate to 9 chars total
+            displayString = parseFloat(displayString).toFixed(
+                Math.max(0, 8 - displayString.indexOf('.'))
+            );
+        } else {
+            // For integers, use exponential notation
+            displayString = parseFloat(displayString).toExponential(3);
+        }
     }
-    else {
-        display.textContent = displayValue.substring(0, 9);
-    }
+    
+    // Update display
+    display.innerText = displayString;
 }
 
 function clear() {
@@ -78,4 +115,23 @@ function clear() {
     secondOperand = null;
     operater = null;
     result = '0';
+}
+
+function equals() {
+    secondOperand = displayValue;
+    operate();
+    displayValue = result;
+    console.log(firstOperand + " " + operator + " " + secondOperand + " = " + result);
+}
+
+function operate() {
+    firstOperand = parseFloat(firstOperand);
+    secondOperand = parseFloat(secondOperand);
+    switch (operator) {
+        case 'add': result = firstOperand + secondOperand; break;
+        case 'subtract': result = firstOperand - secondOperand; break;
+        case 'multiply': result = firstOperand * secondOperand; break;
+        case 'divide': result = firstOperand / secondOperand; break;
+        default: result = "Error"; break;
+    }
 }
