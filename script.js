@@ -59,22 +59,28 @@ buttons.forEach((button) => {
 
 
 function inputOperand(operand) {
-    //if (firstOperand === null) {
+    if (firstOperand === null) {
         if (displayValue === 0 || displayValue === '0') {
             displayValue = operand;
         }
         else {
             displayValue += operand;
         }
-    //}
+    }
+    else {
+        if (displayValue === firstOperand) {
+            displayValue = operand;
+        }
+        else{
+            displayValue += operand;
+        }
+    }
 }
 
 function inputOperator(op) {
     operator = op;
     firstOperand = displayValue;
-    displayValue = '0'
     console.log(firstOperand + ' ' + operator);
-    
 }
 
 function inputDecimal() {
@@ -113,7 +119,7 @@ function clear() {
     displayValue = '0';
     firstOperand = null;
     secondOperand = null;
-    operater = null;
+    operator = null;
     result = '0';
 }
 
@@ -125,13 +131,14 @@ function equals() {
 }
 
 function operate() {
-    firstOperand = parseFloat(firstOperand);
-    secondOperand = parseFloat(secondOperand);
+    const num1 = parseFloat(firstOperand);
+    const num2 = parseFloat(secondOperand);
+
     switch (operator) {
-        case 'add': result = firstOperand + secondOperand; break;
-        case 'subtract': result = firstOperand - secondOperand; break;
-        case 'multiply': result = firstOperand * secondOperand; break;
-        case 'divide': result = firstOperand / secondOperand; break;
+        case 'add': result = num1 + num2; break;
+        case 'subtract': result = num1 - num2; break;
+        case 'multiply': result = num1 * num2; break;
+        case 'divide': result = num2 === 0 ? 'Error' : num1 / num2; break;
         default: result = "Error"; break;
     }
 }
