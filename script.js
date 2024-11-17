@@ -5,11 +5,6 @@ let operator = null;
 let result = '0';
 
 const display = document.getElementById('display');
-const equalsButton = document.getElementById('equals');
-const clearButton = document.getElementById('clear');
-const signButton = document.getElementById('sign');
-const percentButton = document.getElementById('percent');
-const decimalButton = document.getElementById('decimal');
 const buttons = document.querySelectorAll('button');
 
 buttons.forEach((button) => {
@@ -27,13 +22,13 @@ buttons.forEach((button) => {
     }
     else if (button.id === "clear") {
         button.addEventListener("click", () => {
-            clear();
+            inputClear();
             updateDisplay();
         });
     }
     else if (button.id === "equals") {
         button.addEventListener("click", () => {
-            equals();
+            inputEquals();
             updateDisplay();
         });
     }
@@ -68,7 +63,7 @@ function inputOperand(operand) {
         }
     }
     else {
-        if (displayValue === firstOperand) {
+        if (displayValue === firstOperand || displayValue === '0') {
             displayValue = operand;
         }
         else{
@@ -78,13 +73,28 @@ function inputOperand(operand) {
 }
 
 function inputOperator(op) {
+    if (operator !== null && firstOperand !== null) {
+        secondOperand = displayValue;
+        operate();
+        displayValue = result.toString();
+        firstOperand = displayValue;
+    }
+    else {
+        firstOperand = displayValue;
+    }
     operator = op;
-    firstOperand = displayValue;
-    console.log(firstOperand + ' ' + operator);
 }
 
 function inputDecimal() {
-    displayValue += '.';
+    if (displayValue.toString().includes('.')) {
+        return;
+    }
+    else if (displayValue === firstOperand) {
+        displayValue = '0.';
+    }
+    else {
+        displayValue += '.';
+    }
 }
 
 function inputPercent() {
@@ -92,7 +102,12 @@ function inputPercent() {
 }
 
 function inputSign() {
-    displayValue *= -1;
+    if (displayValue === firstOperand) {
+        displayValue = '0';
+    }
+    else {
+        displayValue *= -1;
+    }
 }
 
 function updateDisplay() {
@@ -115,7 +130,7 @@ function updateDisplay() {
     display.innerText = displayString;
 }
 
-function clear() {
+function inputClear() {
     displayValue = '0';
     firstOperand = null;
     secondOperand = null;
@@ -123,11 +138,16 @@ function clear() {
     result = '0';
 }
 
-function equals() {
+function inputEquals() {
+    if (operator === null || firstOperand === null) {
+        return;
+    }
     secondOperand = displayValue;
     operate();
     displayValue = result;
-    console.log(firstOperand + " " + operator + " " + secondOperand + " = " + result);
+    firstOperand = null;
+    secondOperand = null;
+    operator = null;
 }
 
 function operate() {

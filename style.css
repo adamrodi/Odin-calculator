@@ -39,7 +39,7 @@ button {
 }
 
 .operator, #equals{
-    background-color: #F9B565;
+    background-color: gold;
 }
 
 #clear, #sign, #percent {
